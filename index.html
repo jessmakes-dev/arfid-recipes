@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jess's ARFID Recipes</title>
+<meta name="theme-color" content="#FF9BBB">
+<meta name="description" content="Safe foods, scaled to any amount.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Pastel kawaii recipe box: sticker-style cards with chunky outlines on a blush polka-dot page; one column, phone first */
+  --bg: #FFF3F6;
+  --paper: #FFFFFF;
+  --ink: #4A2C3A;
+  --soft: #8C6A7A;
+  --pink: #FF9BBB;
+  --pink-deep: #E8578A;
+  --butter: #FFE7A0;
+  --mint: #B6F0DC;
+  --lilac: #DCD0FF;
+  --peach: #FFD6C0;
+  --line: #F4D2DE;
+  --display: "Fredoka", "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, #FFE1EA 2.2px, transparent 2.6px);
+  background-size: 26px 26px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+
+.wrap { max-width: 560px; margin: 0 auto; padding: 16px 16px 64px; }
+.kit { padding: 16px; margin-top: 18px; display: grid; gap: 10px; }
+.kit h3 { font-size: 18px; font-weight: 600; }
+.kit .btns { display: grid; gap: 10px; }
+.kit .btn { justify-content: flex-start; }
+.codebox { width: 100%; min-height: 120px; border: 2px solid var(--ink); border-radius: 12px; padding: 10px; font-size: 14px; resize: vertical; text-align: left; }
+.dialog.wide { max-width: 420px; width: 100%; text-align: left; }
+
+/* ---------- Sticker basics ---------- */
+.sticker {
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 0 4px 0 var(--ink);
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 2.5px solid var(--ink); border-radius: 999px;
+  background: var(--paper); box-shadow: 0 3px 0 var(--ink);
+  padding: 8px 16px; font-family: var(--display); font-weight: 600; font-size: 15px;
+  transition: transform .1s, box-shadow .1s;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--ink); }
+.btn.pink { background: var(--pink); }
+.btn.mint { background: var(--mint); }
+.btn.small { padding: 5px 12px; font-size: 14px; }
+.btn.ghost { box-shadow: none; border-style: dashed; background: transparent; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* ---------- Home ---------- */
+.home-head { display: grid; gap: 6px; padding: 12px 4px 20px; text-align: center; justify-items: center; }
+.home-head .crew { display: flex; align-items: flex-end; gap: 4px; height: 76px; }
+.home-head .crew > div { animation: bob 2.4s ease-in-out infinite; }
+.home-head .crew > div:nth-child(2) { animation-delay: -.8s; }
+.home-head .crew > div:nth-child(3) { animation-delay: -1.6s; }
+.home-head h1 { font-size: 34px; font-weight: 700; color: var(--pink-deep); letter-spacing: .3px; }
+.home-head p { margin: 0; color: var(--soft); font-weight: 700; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rcard {
+  display: grid; grid-template-rows: auto 1fr; text-align: left; padding: 0; overflow: hidden;
+  border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper);
+  box-shadow: 0 4px 0 var(--ink); transition: transform .12s, box-shadow .12s;
+}
+.rcard:active { transform: translateY(4px); box-shadow: 0 0 0 var(--ink); }
+.rcard .art { display: grid; place-items: center; height: 120px; border-bottom: 2.5px solid var(--ink); }
+.rcard .art > div { width: 104px; animation: bob 2.2s ease-in-out infinite; }
+.rcard .meta { padding: 10px 12px 12px; display: grid; gap: 2px; align-content: start; }
+.rcard h3 { font-size: 18px; font-weight: 600; }
+.rcard .sub { font-size: 13px; color: var(--soft); font-weight: 700; }
+.addcard {
+  display: grid; place-items: center; gap: 6px; min-height: 190px; padding: 12px;
+  border: 2.5px dashed var(--ink); border-radius: 22px; background: rgba(255,255,255,.6);
+  font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--ink);
+}
+.addcard .plus { width: 48px; height: 48px; border-radius: 50%; background: var(--butter); border: 2.5px solid var(--ink); display: grid; place-items: center; font-size: 28px; line-height: 1; }
+.empty { text-align: center; padding: 28px 16px; display: grid; gap: 10px; justify-items: center; }
+.empty p { margin: 0; color: var(--soft); font-weight: 700; }
+
+/* ---------- Recipe view ---------- */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.topbar .right { display: flex; gap: 8px; flex-wrap: wrap; }
+.wake.on { background: var(--mint); }
+
+.hero {
+  position: relative; overflow: hidden; height: 200px;
+  border: 2.5px solid var(--ink); border-radius: 26px; box-shadow: 0 4px 0 var(--ink);
+}
+.hero .bits { position: absolute; inset: 0; pointer-events: none; }
+.bit { position: absolute; bottom: -24px; width: 18px; animation: floatUp linear infinite; opacity: 0; }
+.parade { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center; align-items: flex-end; gap: 2px; }
+.dancer { border: 0; background: none; padding: 0; animation: hop .9s ease-in-out infinite alternate; transform-origin: 50% 100%; position: relative; }
+.dancer svg { display: block; width: 100%; height: auto; }
+.dancer.spin { animation: spin .7s ease-in-out; }
+.yum {
+  position: absolute; left: 50%; top: -18px; transform: translateX(-50%);
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 0 8px;
+  font-family: var(--display); font-weight: 700; font-size: 13px; white-space: nowrap;
+  animation: pop .9s ease-out forwards;
+}
+.rtitle { padding: 18px 4px 6px; display: grid; gap: 4px; }
+.rtitle h2 { font-size: 30px; font-weight: 700; }
+
+.scaler { padding: 16px; margin-top: 10px; display: grid; gap: 12px; background: var(--butter); }
+.scaler .q { font-family: var(--display); font-weight: 600; font-size: 18px; }
+.sc-row { display: grid; grid-template-columns: 52px 1fr 52px; gap: 10px; align-items: center; }
+.sc-row .round {
+  width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--paper);
+  box-shadow: 0 3px 0 var(--ink); font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1;
+}
+.sc-row .round:active { transform: translateY(3px); box-shadow: none; }
+.sc-val { display: flex; align-items: baseline; justify-content: center; gap: 6px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 18px; padding: 4px 10px; }
+.sc-val input {
+  width: 100%; min-width: 0; max-width: 150px; border: 0; background: transparent; text-align: right;
+  font-family: var(--display); font-weight: 700; font-size: 34px; font-variant-numeric: tabular-nums; padding: 0;
+}
+.sc-val input:focus { outline: none; }
+.sc-val .unit { font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--soft); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: none; }
+.chip {
+  flex: none; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); padding: 4px 12px;
+  font-family: var(--display); font-weight: 600; font-size: 15px;
+}
+.chip.active { background: var(--pink); }
+.chip .star { color: var(--pink-deep); }
+.chip.active .star { color: var(--ink); }
+.sc-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 32px; }
+.sc-foot .msg { font-size: 14px; font-weight: 700; color: var(--ink); }
+
+.tabs {
+  position: sticky; top: 8px; z-index: 5; margin: 18px 0 14px; display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--paper); border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px; box-shadow: 0 3px 0 var(--ink);
+}
+.tab { border: 0; background: transparent; border-radius: 999px; padding: 8px 4px; font-family: var(--display); font-weight: 600; font-size: 16px; }
+.tab[aria-selected="true"] { background: var(--pink); }
+
+.list { display: grid; gap: 10px; }
+.ing { padding: 12px 14px; display: grid; gap: 2px; }
+.ing .line { font-size: 17px; }
+.ing .amt { font-family: var(--display); font-weight: 700; color: var(--pink-deep); font-size: 19px; margin-right: 4px; }
+.ing .nm { font-weight: 800; }
+.ing .note { font-size: 14px; color: var(--soft); font-weight: 700; }
+.ing .was { justify-self: start; margin-top: 4px; font-size: 12px; font-weight: 800; background: var(--lilac); border-radius: 999px; padding: 1px 9px; }
+.ing.anchor { background: #FFF8E2; }
+
+.step { padding: 14px; display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; }
+.step .num {
+  width: 44px; height: 44px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center;
+  font-family: var(--display); font-weight: 700; font-size: 20px; background: var(--mint);
+}
+.step:nth-child(3n+2) .num { background: var(--pink); }
+.step:nth-child(3n+3) .num { background: var(--butter); }
+.step h3 { font-size: 18px; font-weight: 600; margin-bottom: 2px; }
+.step p { margin: 0; }
+.tok { color: var(--pink-deep); font-weight: 800; }
+
+.notes { padding: 14px; display: grid; gap: 8px; }
+.notes textarea {
+  width: 100%; min-height: 200px; resize: vertical; border: 2px dashed var(--line); border-radius: 14px; padding: 12px;
+  background: #FFFBFD; line-height: 1.5;
+}
+.notes textarea:focus { outline: none; border-color: var(--pink); }
+.notes .status { font-size: 13px; font-weight: 800; color: var(--soft); min-height: 20px; }
+.hint { font-size: 14px; color: var(--soft); font-weight: 700; margin: 0; }
+
+/* ---------- Editor ---------- */
+.editor { display: grid; gap: 16px; }
+.panel { padding: 16px; display: grid; gap: 12px; }
+.panel h3 { font-size: 20px; font-weight: 600; }
+label.f { display: grid; gap: 4px; font-weight: 800; font-size: 14px; }
+.inp, .sel, .ta {
+  width: 100%; border: 2px solid var(--ink); border-radius: 12px; background: var(--paper); padding: 8px 10px; font-size: 16px;
+}
+.ta { min-height: 76px; resize: vertical; }
+.pick { display: flex; gap: 8px; flex-wrap: wrap; }
+.pick button { width: 68px; height: 62px; border: 2.5px solid var(--line); border-radius: 16px; background: var(--paper); padding: 4px; display: grid; place-items: center; }
+.pick button[aria-pressed="true"] { border-color: var(--ink); background: var(--butter); box-shadow: 0 3px 0 var(--ink); }
+.pick button svg { width: 54px; height: auto; }
+.swatch { width: 40px !important; height: 40px !important; border-radius: 50% !important; }
+.erow { border: 2px solid var(--line); border-radius: 16px; padding: 10px; display: grid; gap: 8px; background: #FFFBFD; }
+.erow .r1 { display: grid; grid-template-columns: 76px 96px 1fr; gap: 8px; }
+.erow .r2 { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.erow .tools { display: flex; gap: 6px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); display: grid; place-items: center; font-weight: 800; line-height: 1; padding: 0; }
+.radio { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; }
+.radio input { width: 18px; height: 18px; accent-color: var(--pink-deep); }
+.save-bar { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+.err { color: #B4234F; font-weight: 800; margin: 0; }
+@media (max-width: 420px) {
+  .erow .r1 { grid-template-columns: 1fr 1fr; }
+  .erow .r1 .nmcell { grid-column: 1 / -1; }
+  .rcard .art { height: 104px; }
+  .rcard .art > div { width: 92px; }
+}
+
+/* ---------- Overlay + toast ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(74,44,58,.35); display: grid; place-items: center; padding: 16px; z-index: 50; }
+.dialog { padding: 20px; max-width: 360px; display: grid; gap: 14px; text-align: center; }
+.dialog .row { display: flex; gap: 10px; justify-content: center; }
+.toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 60; max-width: calc(100% - 32px);
+  background: var(--ink); color: #fff; border-radius: 16px; padding: 10px 16px; font-weight: 800; font-size: 14px; text-align: center;
+}
+.loading { text-align: center; padding: 60px 16px; display: grid; gap: 12px; justify-items: center; color: var(--soft); font-weight: 800; }
+.loading > div { width: 96px; animation: hop .6s ease-in-out infinite alternate; }
+
+/* ---------- Mascot animation ---------- */
+.eyes { transform-box: fill-box; transform-origin: center; animation: blink 4.6s infinite; }
+.steam { animation: steam 2.4s ease-in-out infinite; }
+.steam.s2 { animation-delay: -1.2s; }
+
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
+@keyframes hop { 0% { transform: translateY(0) rotate(-7deg) scaleY(.96); } 100% { transform: translateY(-16px) rotate(7deg) scaleY(1.03); } }
+@keyframes spin { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(200deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+@keyframes pop { 0% { opacity: 0; transform: translate(-50%, 8px) scale(.6); } 25% { opacity: 1; transform: translate(-50%, 0) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -26px) scale(1); } }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.12); } }
+@keyframes steam { 0%, 100% { opacity: .2; transform: translateY(4px); } 50% { opacity: .9; transform: translateY(-4px); } }
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0); opacity: 0; }
+  12% { opacity: .95; }
+  85% { opacity: .95; }
+  100% { transform: translateY(-250px) rotate(320deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .bit { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div id="layer"></div>
+
+<script>
+(function () {
+"use strict";
+
+/* ================= Mascots ================= */
+var INK = "#4A2C3A";
+function face(cx, cy, s) {
+  s = s || 1;
+  return '<g transform="translate(' + cx + ' ' + cy + ') scale(' + s + ')">' +
+    '<g class="eyes"><ellipse cx="-12" cy="0" rx="4.2" ry="5.2" fill="' + INK + '"/><ellipse cx="12" cy="0" rx="4.2" ry="5.2" fill="' + INK + '"/>' +
+    '<circle cx="-10.4" cy="-2.2" r="1.6" fill="#fff"/><circle cx="13.6" cy="-2.2" r="1.6" fill="#fff"/></g>' +
+    '<ellipse cx="-21" cy="7" rx="5.5" ry="3.2" fill="#FF7FA3" opacity=".6"/><ellipse cx="21" cy="7" rx="5.5" ry="3.2" fill="#FF7FA3" opacity=".6"/>' +
+    '<path d="M-5 6 Q0 11.5 5 6" stroke="' + INK + '" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+    '</g>';
+}
+function bumps(x0, y, n, w, h) {
+  var d = "M" + x0 + " " + y;
+  for (var i = 0; i < n; i++) d += " q" + (w / 2) + " " + (-h) + " " + w + " 0";
+  return d;
+}
+var MASCOTS = {
+  taco: {
+    label: "Taco",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true"><g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">' +
+        '<path d="' + bumps(12, 56, 8, 14, 18) + ' L126 60 L12 60 Z" fill="#7ED67A"/>' +
+        '<path d="' + bumps(18, 58, 9, 12, 12) + ' L126 62 L18 62 Z" fill="#A9653E"/>' +
+        '<rect x="40" y="38" width="7" height="16" rx="3.5" fill="#FFC93C" transform="rotate(-18 43 46)"/>' +
+        '<rect x="84" y="36" width="7" height="16" rx="3.5" fill="#FFC93C" transform="rotate(14 87 44)"/>' +
+        '<circle cx="28" cy="48" r="6" fill="#FF5E66"/><circle cx="66" cy="44" r="6" fill="#FF5E66"/><circle cx="108" cy="47" r="6" fill="#FF5E66"/>' +
+        '<path d="M4 54 A66 46 0 0 0 136 54 Z" fill="#FFD36B"/>' +
+        '</g>' +
+        '<path d="M16 62 A54 36 0 0 0 124 62" stroke="#F0B440" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<g fill="#EDAE3A"><circle cx="34" cy="84" r="2"/><circle cx="106" cy="84" r="2"/><circle cx="52" cy="94" r="1.8"/><circle cx="88" cy="94" r="1.8"/><circle cx="22" cy="68" r="1.8"/><circle cx="118" cy="68" r="1.8"/></g>' +
+        face(70, 74, 1) + '</svg>';
+    },
+    bits: ["cheese", "lettuce", "tomato", "heart"]
+  },
+  bowl: {
+    label: "Bowl",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true">' +
+        '<path class="steam" d="M52 22 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<path class="steam s2" d="M88 22 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">' +
+        '<line x1="98" y1="8" x2="80" y2="48" stroke="#B9774A" stroke-width="4"/><line x1="110" y1="12" x2="88" y2="48" stroke="#B9774A" stroke-width="4"/>' +
+        '<path d="M18 52 Q36 24 70 28 Q104 24 122 52 Z" fill="#FFEFB3"/>' +
+        '<path d="M34 46 q8 -10 16 0 t16 0 t16 0 t16 0" fill="none" stroke="#E7C25C"/>' +
+        '<path d="M44 38 q8 -9 16 0 t16 0 t16 0" fill="none" stroke="#E7C25C"/>' +
+        '<path d="M10 52 H130 A60 52 0 0 1 10 52 Z" fill="#FFB8CC"/>' +
+        '<path d="M56 104 H84 L88 110 H52 Z" fill="#FF9BBB"/>' +
+        '</g>' + face(70, 76, 1) + '</svg>';
+    },
+    bits: ["heart", "sparkle", "dot"]
+  },
+  nugget: {
+    label: "Nugget",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true"><g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round">' +
+        '<path d="M30 42 C30 18 72 10 94 20 C122 30 130 56 120 78 C110 104 68 108 42 98 C18 88 18 60 30 42 Z" fill="#F6BC55"/>' +
+        '</g><g fill="#D98E2B"><circle cx="44" cy="40" r="2.4"/><circle cx="98" cy="34" r="2.4"/><circle cx="112" cy="70" r="2.2"/><circle cx="40" cy="84" r="2.2"/><circle cx="80" cy="96" r="2.4"/><circle cx="62" cy="28" r="2"/></g>' +
+        face(74, 64, 1) + '</svg>';
+    },
+    bits: ["sparkle", "heart", "dot"]
+  },
+  pancakes: {
+    label: "Pancakes",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true"><g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round">' +
+        '<ellipse cx="70" cy="102" rx="60" ry="9" fill="#DCD0FF"/>' +
+        '<rect x="18" y="76" width="104" height="22" rx="11" fill="#F7C47E"/>' +
+        '<rect x="22" y="56" width="96" height="22" rx="11" fill="#F7C47E"/>' +
+        '<rect x="26" y="36" width="88" height="22" rx="11" fill="#F7C47E"/>' +
+        '<path d="M34 40 Q70 30 106 40 L104 50 Q98 62 92 50 Q80 46 70 54 Q62 62 56 50 Q46 46 38 52 Z" fill="#C8742A"/>' +
+        '<rect x="58" y="22" width="24" height="16" rx="4" fill="#FFF0A6"/>' +
+        '</g>' + face(70, 68, .85) + '</svg>';
+    },
+    bits: ["heart", "sparkle", "dot"]
+  },
+  pot: {
+    label: "Pot",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true">' +
+        '<path class="steam" d="M56 18 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<path class="steam s2" d="M84 18 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round">' +
+        '<rect x="6" y="52" width="16" height="12" rx="6" fill="#9FDCC7"/><rect x="118" y="52" width="16" height="12" rx="6" fill="#9FDCC7"/>' +
+        '<rect x="18" y="42" width="104" height="62" rx="16" fill="#B6F0DC"/>' +
+        '<path d="M14 42 Q70 18 126 42 Z" fill="#9FDCC7"/>' +
+        '<rect x="62" y="22" width="16" height="10" rx="5" fill="#FF9BBB"/>' +
+        '</g>' + face(70, 74, 1) + '</svg>';
+    },
+    bits: ["heart", "sparkle", "dot"]
+  },
+  saucepan: {
+    label: "Saucepan",
+    svg: function () {
+      return '<svg viewBox="0 0 140 114" aria-hidden="true">' +
+        '<path class="steam" d="M44 30 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<path class="steam s2" d="M68 26 q-6 -8 0 -16" stroke="#C7A3B3" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<g stroke="' + INK + '" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">' +
+        '<line x1="88" y1="62" x2="110" y2="14" stroke-width="10"/><line x1="88" y1="62" x2="110" y2="14" stroke="#C98A55" stroke-width="5"/>' +
+        '<rect x="118" y="66" width="20" height="11" rx="5.5" fill="#FF9BBB"/>' +
+        '<path d="M18 62 L23 100 Q25 110 38 110 L102 110 Q115 110 117 100 L122 62 Z" fill="#FF9BBB"/>' +
+        '<ellipse cx="70" cy="62" rx="52" ry="12" fill="#E34B4B"/>' +
+        '</g><g fill="#8B4A2B"><circle cx="40" cy="61" r="3"/><circle cx="56" cy="65" r="2.6"/><circle cx="72" cy="59" r="3"/><circle cx="100" cy="64" r="2.6"/><circle cx="50" cy="57" r="2.2"/></g>' +
+        face(70, 88, 1) + '</svg>';
+    },
+    bits: ["tomato", "heart", "sparkle"]
+  }
+};
+var BITS = {
+  cheese: '<svg viewBox="0 0 20 20"><rect x="7" y="1" width="6" height="18" rx="3" fill="#FFC93C" stroke="' + INK + '" stroke-width="1.6"/></svg>',
+  lettuce: '<svg viewBox="0 0 20 20"><path d="M3 12 Q4 3 12 3 Q18 4 17 11 Q12 18 3 12 Z" fill="#7ED67A" stroke="' + INK + '" stroke-width="1.6"/></svg>',
+  tomato: '<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#FF5E66" stroke="' + INK + '" stroke-width="1.6"/><circle cx="8" cy="8" r="1.5" fill="#FFB3B7"/></svg>',
+  heart: '<svg viewBox="0 0 20 20"><path d="M10 17 C2 11 2 5 6 4 C8 3.5 9.5 5 10 6 C10.5 5 12 3.5 14 4 C18 5 18 11 10 17 Z" fill="#FF9BBB" stroke="' + INK + '" stroke-width="1.6"/></svg>',
+  sparkle: '<svg viewBox="0 0 20 20"><path d="M10 1 L12 8 L19 10 L12 12 L10 19 L8 12 L1 10 L8 8 Z" fill="#FFE7A0" stroke="' + INK + '" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  dot: '<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="#DCD0FF" stroke="' + INK + '" stroke-width="1.6"/></svg>'
+};
+var TINTS = { pink: "#FFD3E0", butter: "#FFEDB8", mint: "#C9F5E6", lilac: "#E6DDFF", peach: "#FFDCCB" };
+function mascotSvg(k) { return (MASCOTS[k] || MASCOTS.pot).svg(); }
+function tint(k) { return TINTS[k] || TINTS.pink; }
+
+/* ================= Amount maths ================= */
+var FR = { "0.25": "¼", "0.5": "½", "0.75": "¾" };
+function frac(x, step) {
+  step = step || 0.25;
+  var r = Math.round(x / step) * step;
+  var w = Math.floor(r + 1e-9);
+  var f = Math.round((r - w) * 100) / 100;
+  var s = (w > 0 ? String(w) : "") + (FR[String(f)] || "");
+  return s || "0";
+}
+function small(tsp) {
+  if (tsp >= 3.85) {
+    var tb = tsp / 4, near = Math.round(tb * 2) / 2;
+    if (Math.abs(tb - near) * 4 < 0.3) return frac(near, 0.5) + " tbsp";
+    var fl = Math.floor(tb * 2 + 1e-9) / 2;
+    var rem = Math.round((tsp - fl * 4) * 4) / 4;
+    if (rem <= 0) return frac(fl, 0.5) + " tbsp";
+    return frac(fl, 0.5) + " tbsp + " + frac(rem) + " tsp";
+  }
+  var r = Math.round(tsp * 4) / 4;
+  if (r === 0) return "a pinch";
+  return frac(r) + " tsp";
+}
+/* Australian spoons: 1 tbsp = 4 tsp, 1 cup = 50 tsp */
+function fmtVol(a, u) {
+  var TSP = { tsp: 1, tbsp: 4, cup: 50 };
+  var tsp = a * TSP[u];
+  if (u === "cup" || tsp >= 12.5) {
+    var cups = tsp / 50, near = Math.round(cups * 4) / 4;
+    if (near > 0 && Math.abs(cups - near) * 50 < 0.75) return frac(near) + (near > 1 ? " cups" : " cup");
+    var fl = Math.floor(cups * 4 + 1e-9) / 4;
+    var rem = tsp - fl * 50;
+    if (fl === 0) return small(rem);
+    return frac(fl) + (fl > 1 ? " cups + " : " cup + ") + small(rem);
+  }
+  return small(tsp);
+}
+var PLURAL = { packet: "packets", bottle: "bottles", jar: "jars", can: "cans", cube: "cubes", slice: "slices", pinch: "pinches" };
+function fmtCount(a, u) {
+  var step = u === "whole" ? 0.5 : 0.25;
+  var q = Math.round(a / step) * step, diff = a - q;
+  if (q === 0) return "a little";
+  var s = frac(q, step) + (u === "whole" ? "" : " " + (q > 1 ? (PLURAL[u] || u) : u));
+  if (diff > 0.04) s += " + a little extra";
+  else if (diff < -0.04) s = "just under " + s;
+  return s;
+}
+function fmtGrams(a) {
+  if (a >= 20) return String(Math.round(a / 5) * 5) + " g";
+  return String(Math.max(1, Math.round(a))) + " g";
+}
+function fmtAmount(a, u) {
+  if (u === "to taste") return "to taste";
+  if (!(a > 0)) return "";
+  if (u === "g") return fmtGrams(a);
+  if (u === "cup" || u === "tbsp" || u === "tsp") return fmtVol(a, u);
+  return fmtCount(a, u);
+}
+function parseAmount(str) {
+  if (str == null) return NaN;
+  var s = String(str).trim().replace(/¼/g, " 1/4").replace(/½/g, " 1/2").replace(/¾/g, " 3/4").replace(/⅓/g, " 1/3").replace(/⅔/g, " 2/3").trim();
+  if (!s) return NaN;
+  var total = 0, parts = s.split(/\s+/);
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    if (/^\d+\/\d+$/.test(p)) { var ab = p.split("/"); if (+ab[1] === 0) return NaN; total += +ab[0] / +ab[1]; }
+    else if (/^\d*\.?\d+$/.test(p)) total += +p;
+    else return NaN;
+  }
+  return total;
+}
+function amountToText(a) {
+  if (!(a > 0)) return "";
+  var q = Math.round(a * 4) / 4;
+  if (Math.abs(q - a) < 1e-6) return frac(q);
+  return String(Math.round(a * 100) / 100);
+}
+
+/* ================= State ================= */
+var UNITS = ["g", "cup", "tbsp", "tsp", "packet", "bottle", "jar", "can", "cube", "slice", "pinch", "whole", "to taste"];
+var S = {
+  db: null, dbMissing: false, loaded: false, slow: false, canWrite: true,
+  recipes: [], view: "home", id: null, tab: "ing", amounts: {},
+  draft: null, draftErr: "", wantWake: false, wake: null
+};
+var app = document.getElementById("app");
+var layer = document.getElementById("layer");
+var writeChains = {};
+var notesTimer = null;
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function findRecipe(id) { for (var i = 0; i < S.recipes.length; i++) if (S.recipes[i].id === id) return S.recipes[i]; return null; }
+function anchorOf(r) {
+  var ings = r.ingredients || [];
+  var i = typeof r.anchor === "number" && ings[r.anchor] ? r.anchor : 0;
+  return { idx: i, ing: ings[i] || { name: "", amount: 1, unit: "whole" } };
+}
+function currentAmount(r) {
+  var base = anchorOf(r).ing.amount;
+  if (S.amounts[r.id] == null) {
+    var saved = parseFloat(lsGet("amt:" + r.id));
+    S.amounts[r.id] = saved > 0 ? saved : base;
+  }
+  return S.amounts[r.id];
+}
+function factorOf(r) {
+  var base = anchorOf(r).ing.amount;
+  return base > 0 ? currentAmount(r) / base : 1;
+}
+function setAmount(r, v) {
+  v = Math.max(anchorOf(r).ing.unit === "g" ? 10 : 0.25, Math.round(v * 100) / 100);
+  S.amounts[r.id] = v;
+  lsSet("amt:" + r.id, String(v));
+}
+function anchorText(r, amt) {
+  var a = anchorOf(r).ing;
+  if (a.unit === "g") return Math.round(amt) + " g";
+  return fmtAmount(amt, a.unit);
+}
+function gramLabel(g) {
+  if (g >= 1000 && g % 250 === 0) return frac(g / 1000) + " kg";
+  return g + " g";
+}
+
+function toast(msg) {
+  var t = document.createElement("div");
+  t.className = "toast"; t.setAttribute("role", "status"); t.textContent = msg;
+  layer.appendChild(t);
+  setTimeout(function () { t.remove(); }, 3400);
+}
+function queuedWrite(id, fn) {
+  var prev = writeChains[id] || Promise.resolve();
+  var next = prev.catch(function () {}).then(fn);
+  writeChains[id] = next;
+  return next;
+}
+function handleWriteError(e) {
+  var code = e && e.code;
+  if (code === "invalid_argument") {
+    S.canWrite = false;
+    toast("You can look at these recipes, but changes can't be saved from this view.");
+  } else if (code === "quota_exceeded") {
+    toast("The recipe box is full. Delete a recipe to make room.");
+  } else {
+    toast("That didn't save. Check your connection and try again.");
+  }
+}
+
+/* ================= Routing ================= */
+function parseHash() {
+  var h = (location.hash || "").replace(/^#/, "");
+  if (h.indexOf("recipe-") === 0) return { view: "recipe", id: h.slice(7) };
+  if (h.indexOf("edit-") === 0) return { view: "edit", id: h.slice(5) };
+  if (h === "new-recipe") return { view: "edit", id: null };
+  return { view: "home", id: null };
+}
+function go(hash) {
+  if (location.hash === "#" + hash) route();
+  else location.hash = hash;
+}
+function route() {
+  var r = parseHash();
+  if (S.view === "recipe" && (r.view !== "recipe" || r.id !== S.id)) stopWake();
+  if (r.view === "edit" && (S.view !== "edit" || S.id !== r.id)) S.draft = null;
+  if (r.view === "recipe" && S.id !== r.id) S.tab = "ing";
+  S.view = r.view; S.id = r.id;
+  render();
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+
+/* ================= Rendering ================= */
+function render() {
+  if (!S.loaded) {
+    app.innerHTML = '<div class="loading"><div>' + mascotSvg("taco") + '</div><div>' +
+      (S.slow ? "Your recipes can't be reached yet. They'll appear when the connection comes back." : "Fetching your recipes…") + '</div></div>';
+    return;
+  }
+  if (S.view === "recipe") return renderRecipe();
+  if (S.view === "edit") return renderEdit();
+  renderHome();
+}
+
+function renderHome() {
+  var list = S.recipes.slice().sort(function (a, b) {
+    return (a.order || 0) - (b.order || 0) || String(a.name).localeCompare(String(b.name));
+  });
+  var h = '<header class="home-head"><div class="crew" aria-hidden="true">' +
+    '<div style="width:78px">' + mascotSvg("saucepan") + '</div><div style="width:84px">' + mascotSvg("taco") + '</div>' +
+    '</div><h1>Jess\'s ARFID Recipes</h1><p>Safe foods, scaled to any amount</p></header>';
+  if (!list.length) {
+    h += '<div class="sticker empty"><div style="width:110px">' + mascotSvg("pot") + '</div><p>No recipes yet.</p>' +
+      '<button class="btn pink" data-act="new">Add your first recipe</button></div>';
+    app.innerHTML = h + kitPanel(); return;
+  }
+  h += '<div class="grid">';
+  list.forEach(function (r) {
+    var a = anchorOf(r).ing;
+    h += '<button class="rcard" data-open="' + esc(r.id) + '">' +
+      '<div class="art" style="background:' + tint(r.color) + '"><div>' + mascotSvg(r.mascot) + '</div></div>' +
+      '<div class="meta"><h3>' + esc(r.name) + '</h3><div class="sub">Default: ' + esc(anchorText(r, a.amount)) + ' ' + esc(a.name) + '</div>' +
+      '<div class="sub">' + plural((r.ingredients || []).length, "ingredient") + ' · ' + plural((r.steps || []).length, "step") + '</div></div></button>';
+  });
+  if (S.canWrite) h += '<button class="addcard" data-act="new"><span class="plus" aria-hidden="true">+</span>Add a recipe</button>';
+  h += '</div>';
+  app.innerHTML = h + kitPanel();
+}
+function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+function kitPanel() {
+  var last = parseInt(lsGet(BACKUP_KEY), 10);
+  var when = last > 0 ? new Date(last).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }) : "";
+  return '<section class="sticker kit"><h3>Recipe codes & backups</h3>' +
+    '<div class="btns"><button class="btn mint" data-act="code">' + ICON_PLUS + 'Add from a recipe code</button>' +
+    '<button class="btn" data-act="backup">' + ICON_CLOUD + 'Back up to Google Drive</button>' +
+    '<button class="btn" data-act="restore">' + ICON_RESTORE + 'Restore from a backup</button></div>' +
+    '<p class="hint">' + (when ? "Last backup: " + esc(when) : "No backup yet. Your recipes and notes are saved on this phone only.") + '</p>' +
+    '<input type="file" id="restore-file" accept=".txt,.json,text/plain,application/json" hidden></section>';
+}
+
+var ICON_SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+var ICON_PEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>';
+var ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+var ICON_CLOUD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z"/><path d="M12 15V10M9.5 12.5 12 10l2.5 2.5"/></svg>';
+var ICON_RESTORE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>';
+var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+var ICON_BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+
+function renderRecipe() {
+  var r = findRecipe(S.id);
+  if (!r) {
+    app.innerHTML = '<div class="topbar"><button class="btn small" data-act="home">' + ICON_BACK + 'All recipes</button></div>' +
+      '<div class="sticker empty"><p>This recipe isn\'t in your box any more.</p></div>';
+    return;
+  }
+  var dancers = [0.62, 0.8, 1, 0.8, 0.62], h = "";
+  h += '<div class="topbar"><button class="btn small" data-act="home">' + ICON_BACK + 'All recipes</button><div class="right">' +
+    '<button class="btn small wake' + (S.wantWake ? " on" : "") + '" data-act="wake" aria-pressed="' + S.wantWake + '">' + ICON_SUN + (S.wantWake ? "Screen staying on" : "Keep screen on") + '</button>' +
+    '<button class="btn small" data-act="edit">' + ICON_PEN + 'Edit</button>' +
+    '</div></div>';
+  h += '<div class="hero" style="background:' + tint(r.color) + '"><div class="bits" id="bits"></div><div class="parade">';
+  dancers.forEach(function (s, i) {
+    h += '<button class="dancer" data-dance aria-label="Make it dance" style="width:' + Math.round(96 * s) + 'px;animation-delay:' + (-i * 0.18) + 's">' + mascotSvg(r.mascot) + '</button>';
+  });
+  h += '</div></div>';
+  h += '<div class="rtitle"><h2>' + esc(r.name) + '</h2>' + (r.subtitle ? '<p class="hint">' + esc(r.subtitle) + '</p>' : '') + '</div>';
+  h += '<section class="sticker scaler" id="scaler"></section>';
+  h += '<div class="tabs" role="tablist">' +
+    tabBtn("ing", "Ingredients") + tabBtn("steps", "Steps") + tabBtn("notes", "My notes") + '</div>';
+  h += '<div id="panel"></div>';
+  app.innerHTML = h;
+  renderScaler(r);
+  renderPanel(r);
+  spawnBits(r);
+}
+function tabBtn(k, label) {
+  return '<button class="tab" role="tab" data-tab="' + k + '" aria-selected="' + (S.tab === k) + '">' + label + '</button>';
+}
+function spawnBits(r) {
+  var box = document.getElementById("bits");
+  if (!box) return;
+  var kinds = (MASCOTS[r.mascot] || MASCOTS.pot).bits, html = "";
+  for (var i = 0; i < 14; i++) {
+    var k = kinds[i % kinds.length];
+    var left = (i * 37 + 7) % 96, dur = 5 + (i % 5) * 1.1, delay = -((i * 0.9) % dur), size = 14 + (i % 3) * 5;
+    html += '<div class="bit" style="left:' + left + '%;width:' + size + 'px;animation-duration:' + dur + 's;animation-delay:' + delay + 's">' + BITS[k] + '</div>';
+  }
+  box.innerHTML = html;
+}
+
+function renderScaler(r) {
+  var el = document.getElementById("scaler");
+  if (!el) return;
+  var a = anchorOf(r).ing, base = a.amount, cur = currentAmount(r), isG = a.unit === "g";
+  var opts;
+  if (isG) {
+    opts = [250, 500, 800, 1000, 1500];
+    if (opts.indexOf(base) < 0) { opts.push(base); opts.sort(function (x, y) { return x - y; }); }
+  } else {
+    opts = [0.5, 1, 1.5, 2].map(function (m) { return base * m; });
+  }
+  var chips = opts.map(function (v) {
+    var lbl = isG ? gramLabel(v) : anchorText(r, v);
+    var isBase = Math.abs(v - base) < 1e-6;
+    return '<button class="chip' + (Math.abs(v - cur) < 1e-6 ? " active" : "") + '" data-amt="' + v + '">' +
+      (isBase ? '<span class="star" aria-hidden="true">★ </span>' : '') + esc(lbl) + (isBase ? '<span class="sr" style="position:absolute;left:-9999px"> (default)</span>' : '') + '</button>';
+  }).join("");
+  var changed = Math.abs(cur - base) > 1e-6;
+  var valStr = isG ? String(Math.round(cur)) : amountToText(cur);
+  el.innerHTML =
+    '<label class="q" for="amt-input">How much ' + esc(a.name) + '?</label>' +
+    '<div class="sc-row"><button class="round" data-step="-1" aria-label="Less">−</button>' +
+    '<div class="sc-val"><input id="amt-input" inputmode="' + (isG ? "numeric" : "decimal") + '" value="' + esc(valStr) + '" aria-label="Amount of ' + esc(a.name) + '">' +
+    '<span class="unit">' + esc(isG ? "g" : (a.unit === "whole" ? "" : a.unit)) + '</span></div>' +
+    '<button class="round" data-step="1" aria-label="More">+</button></div>' +
+    '<div class="chips" role="group" aria-label="Quick amounts">' + chips + '</div>' +
+    '<div class="sc-foot"><span class="msg">' + (changed ? "Everything below is changed to match." : "This is the default recipe.") + '</span>' +
+    (changed ? '<button class="btn small" data-act="reset">Back to ' + esc(anchorText(r, base)) + '</button>' : '') + '</div>';
+}
+function refreshScalerBits(r) {
+  /* Update chips + footer without touching the input the person is typing in */
+  var el = document.getElementById("scaler");
+  if (!el) return;
+  var a = anchorOf(r).ing, base = a.amount, cur = currentAmount(r);
+  el.querySelectorAll(".chip").forEach(function (c) {
+    c.classList.toggle("active", Math.abs(parseFloat(c.getAttribute("data-amt")) - cur) < 1e-6);
+  });
+  var changed = Math.abs(cur - base) > 1e-6;
+  var foot = el.querySelector(".sc-foot");
+  foot.innerHTML = '<span class="msg">' + (changed ? "Everything below is changed to match." : "This is the default recipe.") + '</span>' +
+    (changed ? '<button class="btn small" data-act="reset">Back to ' + esc(anchorText(r, base)) + '</button>' : '');
+}
+
+function scaledText(r, i, f, cur) {
+  var ing = r.ingredients[i], anc = anchorOf(r).idx;
+  if (i === anc) return anchorText(r, cur);
+  return fmtAmount(ing.amount * f, ing.unit);
+}
+function renderPanel(r) {
+  var p = document.getElementById("panel");
+  if (!p) return;
+  var f = factorOf(r), cur = currentAmount(r), changed = Math.abs(f - 1) > 1e-6, h = "";
+  var anc = anchorOf(r).idx;
+  if (S.tab === "ing") {
+    h += '<div class="list">';
+    (r.ingredients || []).forEach(function (ing, i) {
+      var now = scaledText(r, i, f, cur);
+      var was = i === anc ? anchorText(r, ing.amount) : fmtAmount(ing.amount, ing.unit);
+      h += '<div class="sticker ing' + (i === anc ? " anchor" : "") + '"><div class="line">' +
+        (now && now !== "to taste" ? '<span class="amt">' + esc(now) + '</span> ' : '') +
+        '<span class="nm">' + esc(ing.name) + '</span>' + (now === "to taste" ? ' <span class="amt" style="font-size:16px">to taste</span>' : '') + '</div>' +
+        (ing.note ? '<div class="note">' + esc(ing.note) + '</div>' : '') +
+        (changed && was && now !== was ? '<span class="was">default: ' + esc(was) + '</span>' : '') + '</div>';
+    });
+    h += '</div>';
+  } else if (S.tab === "steps") {
+    h += '<div class="list">';
+    (r.steps || []).forEach(function (st, i) {
+      h += '<div class="sticker step"><div class="num" aria-hidden="true">' + (i + 1) + '</div><div>' +
+        (st.title ? '<h3><span style="position:absolute;left:-9999px">Step ' + (i + 1) + ': </span>' + esc(st.title) + '</h3>' : '') +
+        '<p>' + stepText(r, st.text || "", f, cur) + '</p></div></div>';
+    });
+    if (!(r.steps || []).length) h += '<div class="sticker empty"><p>No steps yet.</p></div>';
+    h += '</div>';
+  } else {
+    var dis = false;
+    h += '<div class="sticker notes"><label class="q" for="notes-ta" style="font-family:var(--display);font-weight:600;font-size:18px">My notes</label>' +
+      '<p class="hint">Anything to remember for next time: brands that worked, swaps, how it turned out.</p>' +
+      '<textarea id="notes-ta"' + (dis ? " disabled" : "") + ' placeholder="e.g. Used 5% fat mince, so I added the oil">' + esc(r.notes || "") + '</textarea>' +
+      '<div class="status" id="notes-status">' + (dis ? "Notes can't be saved from this view." : "") + '</div></div>';
+  }
+  p.innerHTML = h;
+}
+function stepText(r, text, f, cur) {
+  var ings = r.ingredients || [];
+  var out = "", last = 0, re = /\[([^\]]+)\]/g, m;
+  while ((m = re.exec(text))) {
+    out += esc(text.slice(last, m.index));
+    var key = m[1].trim().toLowerCase(), idx = -1;
+    for (var i = 0; i < ings.length; i++) if (String(ings[i].name).trim().toLowerCase() === key) { idx = i; break; }
+    if (idx >= 0) {
+      var amt = scaledText(r, idx, f, cur);
+      out += '<span class="tok">' + esc(amt && amt !== "to taste" ? amt + " " : "") + esc(ings[idx].name) + '</span>';
+    } else out += esc(m[1]);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+/* ================= Editor ================= */
+function blankDraft() {
+  return {
+    id: null, name: "", subtitle: "", mascot: "pot", color: "pink", anchor: 0,
+    ingredients: [{ name: "", amount: "", unit: "g", note: "" }],
+    steps: [{ title: "", text: "" }]
+  };
+}
+function draftFrom(r) {
+  var c = JSON.parse(JSON.stringify(r));
+  return {
+    id: r.id, name: c.name || "", subtitle: c.subtitle || "", mascot: c.mascot || "pot", color: c.color || "pink",
+    anchor: anchorOf(c).idx,
+    ingredients: (c.ingredients || []).map(function (g) { return { name: g.name || "", amount: amountToText(g.amount), unit: g.unit || "g", note: g.note || "" }; }),
+    steps: (c.steps || []).map(function (s) { return { title: s.title || "", text: s.text || "" }; })
+  };
+}
+function renderEdit() {
+  if (!S.draft) {
+    if (S.id) {
+      var r = findRecipe(S.id);
+      if (!r) { app.innerHTML = '<div class="sticker empty"><p>This recipe isn\'t in your box any more.</p><button class="btn" data-act="home">All recipes</button></div>'; return; }
+      S.draft = draftFrom(r);
+    } else S.draft = blankDraft();
+    S.draftErr = "";
+  }
+  var d = S.draft, h = "";
+  h += '<div class="topbar"><button class="btn small" data-act="cancel">' + ICON_BACK + 'Cancel</button></div>';
+  h += '<div class="editor">';
+  h += '<h2 style="font-size:28px">' + (d.id ? "Edit recipe" : "New recipe") + '</h2>';
+
+  h += '<section class="sticker panel"><h3>The basics</h3>' +
+    '<label class="f" for="e-name">Recipe name<input class="inp" id="e-name" data-f="name" value="' + esc(d.name) + '" placeholder="e.g. Taco Mince"></label>' +
+    '<label class="f" for="e-sub">Short description (optional)<input class="inp" id="e-sub" data-f="subtitle" value="' + esc(d.subtitle) + '"></label>' +
+    '<div class="f">Cartoon buddy<div class="pick" role="group" aria-label="Cartoon buddy">' +
+    Object.keys(MASCOTS).map(function (k) {
+      return '<button type="button" data-mascot="' + k + '" aria-pressed="' + (d.mascot === k) + '" aria-label="' + MASCOTS[k].label + '">' + MASCOTS[k].svg() + '</button>';
+    }).join("") + '</div></div>' +
+    '<div class="f">Card colour<div class="pick" role="group" aria-label="Card colour">' +
+    Object.keys(TINTS).map(function (k) {
+      return '<button type="button" class="swatch" data-color="' + k + '" aria-pressed="' + (d.color === k) + '" aria-label="' + k + '" style="background:' + TINTS[k] + '"></button>';
+    }).join("") + '</div></div></section>';
+
+  h += '<section class="sticker panel"><h3>Ingredients</h3><p class="hint">Pick one ingredient to scale by. Changing its amount changes everything else.</p>';
+  d.ingredients.forEach(function (g, i) {
+    h += '<div class="erow"><div class="r1">' +
+      '<label class="f" for="ia-' + i + '">Amount<input class="inp" id="ia-' + i + '" data-ing="' + i + '" data-k="amount" value="' + esc(g.amount) + '" placeholder="1/2" inputmode="text"></label>' +
+      '<label class="f" for="iu-' + i + '">Unit<select class="sel" id="iu-' + i + '" data-ing="' + i + '" data-k="unit">' +
+      UNITS.map(function (u) { return '<option value="' + u + '"' + (g.unit === u ? " selected" : "") + '>' + (u === "whole" ? "whole / each" : u) + '</option>'; }).join("") +
+      '</select></label>' +
+      '<label class="f nmcell" for="in-' + i + '">Ingredient<input class="inp" id="in-' + i + '" data-ing="' + i + '" data-k="name" value="' + esc(g.name) + '" placeholder="beef mince"></label></div>' +
+      '<label class="f" for="io-' + i + '">Note (optional)<input class="inp" id="io-' + i + '" data-ing="' + i + '" data-k="note" value="' + esc(g.note) + '"></label>' +
+      '<div class="r2"><label class="radio" for="ix-' + i + '"><input type="radio" name="anchor" id="ix-' + i + '" data-anchor="' + i + '"' + (d.anchor === i ? " checked" : "") + '>Scale by this</label>' +
+      '<div class="tools"><button type="button" class="icon-btn" data-move="ing:' + i + ':-1" aria-label="Move up">↑</button><button type="button" class="icon-btn" data-move="ing:' + i + ':1" aria-label="Move down">↓</button>' +
+      '<button type="button" class="icon-btn" data-del="ing:' + i + '" aria-label="Remove ingredient">×</button></div></div></div>';
+  });
+  h += '<button type="button" class="btn ghost" data-add="ing">+ Add ingredient</button></section>';
+
+  h += '<section class="sticker panel"><h3>Steps</h3><p class="hint">Write an ingredient\'s name in [square brackets], like [water], and the step will show the right amount when you scale.</p>';
+  d.steps.forEach(function (s, i) {
+    h += '<div class="erow">' +
+      '<label class="f" for="st-' + i + '">Step ' + (i + 1) + ' title<input class="inp" id="st-' + i + '" data-step-i="' + i + '" data-k="title" value="' + esc(s.title) + '" placeholder="Brown the mince"></label>' +
+      '<label class="f" for="sx-' + i + '">What to do<textarea class="ta" id="sx-' + i + '" data-step-i="' + i + '" data-k="text">' + esc(s.text) + '</textarea></label>' +
+      '<div class="r2"><span></span><div class="tools"><button type="button" class="icon-btn" data-move="step:' + i + ':-1" aria-label="Move up">↑</button><button type="button" class="icon-btn" data-move="step:' + i + ':1" aria-label="Move down">↓</button>' +
+      '<button type="button" class="icon-btn" data-del="step:' + i + '" aria-label="Remove step">×</button></div></div></div>';
+  });
+  h += '<button type="button" class="btn ghost" data-add="step">+ Add step</button></section>';
+
+  h += '<p class="err" id="e-err" role="alert">' + esc(S.draftErr) + '</p>';
+  h += '<div class="save-bar">' + (d.id ? '<button type="button" class="btn" data-act="delete">Delete recipe</button>' : '<span></span>') +
+    '<button type="button" class="btn pink" data-act="save">Save recipe</button></div>';
+  if (d.id) h += '<section class="sticker kit"><h3>Change it with Claude</h3><p class="hint">Copy this recipe\'s code and paste it into a chat with Claude. You\'ll get a new code back to add here.</p>' +
+    '<button type="button" class="btn" data-act="copycode">' + ICON_COPY + 'Copy recipe code</button></section>';
+  h += '</div>';
+  app.innerHTML = h;
+}
+function slugify(s) {
+  var b = String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "recipe";
+  return b + "-" + Math.random().toString(36).slice(2, 6);
+}
+function saveDraft() {
+  var d = S.draft, errEl = document.getElementById("e-err");
+  function fail(m) { S.draftErr = m; if (errEl) errEl.textContent = m; }
+  if (!d.name.trim()) return fail("Give the recipe a name.");
+  var ings = [], newAnchor = 0, anchorOk = false;
+  for (var i = 0; i < d.ingredients.length; i++) {
+    var g = d.ingredients[i];
+    if (!g.name.trim()) continue;
+    var amt = g.unit === "to taste" ? 0 : parseAmount(g.amount);
+    if (g.unit !== "to taste" && !(amt > 0)) return fail('Check the amount for "' + g.name.trim() + '". Use numbers like 2, 1/2 or 1 1/2.');
+    if (i === d.anchor) { newAnchor = ings.length; anchorOk = g.unit !== "to taste"; }
+    var row = { name: g.name.trim(), amount: amt, unit: g.unit };
+    if (g.note.trim()) row.note = g.note.trim();
+    ings.push(row);
+  }
+  if (!ings.length) return fail("Add at least one ingredient.");
+  if (!anchorOk) return fail("Pick an ingredient with an amount to scale by.");
+  var steps = d.steps.filter(function (s) { return s.title.trim() || s.text.trim(); })
+    .map(function (s) { return { title: s.title.trim(), text: s.text.trim() }; });
+  var body = { name: d.name.trim(), subtitle: d.subtitle.trim(), mascot: d.mascot, color: d.color, anchor: newAnchor, ingredients: ings, steps: steps, updatedAt: Date.now() };
+  var isNew = !d.id, id = d.id || slugify(d.name);
+  var old = findRecipe(id);
+  if (isNew || !old) {
+    body.id = id; body.notes = ""; body.order = Date.now();
+    S.recipes.push(body);
+  } else {
+    if (anchorOf(old).ing.amount !== ings[newAnchor].amount) { delete S.amounts[id]; lsSet("amt:" + id, ""); }
+    for (var k in body) old[k] = body[k];
+  }
+  if (!saveStore()) return;
+  S.draft = null; toast("Recipe saved");
+  go("recipe-" + id);
+}
+function confirmDelete() {
+  var d = S.draft;
+  layer.innerHTML = '<div class="overlay" data-close><div class="sticker dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-t">' +
+    '<h3 id="dlg-t" style="font-size:20px">Delete "' + esc(d.name || "this recipe") + '"?</h3><p class="hint" style="margin:0">Its notes go too. This can\'t be undone.</p>' +
+    '<div class="row"><button class="btn" data-act="dlg-cancel">Keep it</button><button class="btn pink" data-act="dlg-delete">Delete</button></div></div></div>';
+  var b = layer.querySelector('[data-act="dlg-cancel"]'); if (b) b.focus();
+}
+function doDelete() {
+  var id = S.draft && S.draft.id;
+  layer.innerHTML = "";
+  if (!id) return;
+  S.recipes = S.recipes.filter(function (r) { return r.id !== id; });
+  if (!saveStore()) return;
+  S.draft = null; toast("Recipe deleted"); go("");
+}
+
+/* ================= Notes ================= */
+function saveNotes(id, text) {
+  var r = findRecipe(id), st = document.getElementById("notes-status");
+  if (!r) return;
+  r.notes = text;
+  var ok = saveStore();
+  if (st) st.textContent = ok ? "Saved on this phone" : "Not saved";
+}
+
+/* ================= Wake lock ================= */
+function requestWake() {
+  if (!("wakeLock" in navigator)) return Promise.reject(new Error("unsupported"));
+  return navigator.wakeLock.request("screen").then(function (w) {
+    S.wake = w;
+    w.addEventListener("release", function () { S.wake = null; });
+  });
+}
+function stopWake() {
+  S.wantWake = false;
+  if (S.wake) { try { S.wake.release(); } catch (e) {} S.wake = null; }
+}
+function toggleWake() {
+  if (S.wantWake) { stopWake(); updateWakeBtn(); return; }
+  requestWake().then(function () {
+    S.wantWake = true; updateWakeBtn(); toast("Your screen will stay on while this recipe is open");
+  }, function () {
+    toast("Your phone didn't let the screen stay on this time. Try again in a moment.");
+  });
+}
+function updateWakeBtn() {
+  var b = document.querySelector('[data-act="wake"]');
+  if (!b) return;
+  b.classList.toggle("on", S.wantWake);
+  b.setAttribute("aria-pressed", String(S.wantWake));
+  b.innerHTML = ICON_SUN + (S.wantWake ? "Screen staying on" : "Keep screen on");
+}
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible" && S.wantWake && !S.wake) requestWake().catch(function () {});
+});
+
+/* ================= Events ================= */
+app.addEventListener("click", function (e) {
+  var t = e.target.closest("button, [data-open]");
+  if (!t) return;
+  var r = S.view === "recipe" ? findRecipe(S.id) : null;
+  if (t.hasAttribute("data-open")) return go("recipe-" + t.getAttribute("data-open"));
+  var act = t.getAttribute("data-act");
+  if (act === "home") return go("");
+  if (act === "new") return go("new-recipe");
+  if (act === "edit") return go("edit-" + S.id);
+  if (act === "cancel") { var back = S.draft && S.draft.id; S.draft = null; return go(back ? "recipe-" + back : ""); }
+  if (act === "save") return saveDraft();
+  if (act === "delete") return confirmDelete();
+  if (act === "wake") return toggleWake();
+  if (act === "reset" && r) { setAmount(r, anchorOf(r).ing.amount); renderScaler(r); renderPanel(r); return; }
+  if (t.hasAttribute("data-tab") && r) {
+    S.tab = t.getAttribute("data-tab");
+    document.querySelectorAll(".tab").forEach(function (b) { b.setAttribute("aria-selected", String(b === t)); });
+    renderPanel(r); return;
+  }
+  if (t.hasAttribute("data-amt") && r) { setAmount(r, parseFloat(t.getAttribute("data-amt"))); renderScaler(r); renderPanel(r); return; }
+  if (t.hasAttribute("data-step") && r) {
+    var isG = anchorOf(r).ing.unit === "g", dir = +t.getAttribute("data-step");
+    var cur = currentAmount(r), step = isG ? 50 : 0.25;
+    var next = dir > 0 ? Math.floor(cur / step + 1e-9) * step + step : Math.ceil(cur / step - 1e-9) * step - step;
+    setAmount(r, next); renderScaler(r); renderPanel(r); return;
+  }
+  if (t.hasAttribute("data-dance")) {
+    t.classList.remove("spin"); void t.offsetWidth; t.classList.add("spin");
+    var y = document.createElement("span"); y.className = "yum"; y.textContent = ["yum!", "hehe", "olé!", "nom"][Math.floor(Math.random() * 4)];
+    t.appendChild(y);
+    setTimeout(function () { t.classList.remove("spin"); y.remove(); }, 900);
+    return;
+  }
+  /* editor buttons */
+  var d = S.draft;
+  if (!d) return;
+  if (t.hasAttribute("data-mascot")) { d.mascot = t.getAttribute("data-mascot"); document.querySelectorAll("[data-mascot]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); }); return; }
+  if (t.hasAttribute("data-color")) { d.color = t.getAttribute("data-color"); document.querySelectorAll("[data-color]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); }); return; }
+  if (t.hasAttribute("data-add")) {
+    if (t.getAttribute("data-add") === "ing") d.ingredients.push({ name: "", amount: "", unit: "g", note: "" });
+    else d.steps.push({ title: "", text: "" });
+    var y0 = window.scrollY; renderEdit(); window.scrollTo(0, y0); return;
+  }
+  if (t.hasAttribute("data-del")) {
+    var pd = t.getAttribute("data-del").split(":"), i = +pd[1];
+    if (pd[0] === "ing") {
+      d.ingredients.splice(i, 1);
+      if (d.anchor === i) d.anchor = 0; else if (d.anchor > i) d.anchor--;
+      if (!d.ingredients.length) d.ingredients.push({ name: "", amount: "", unit: "g", note: "" });
+    } else { d.steps.splice(i, 1); }
+    var y1 = window.scrollY; renderEdit(); window.scrollTo(0, y1); return;
+  }
+  if (t.hasAttribute("data-move")) {
+    var pm = t.getAttribute("data-move").split(":"), arr = pm[0] === "ing" ? d.ingredients : d.steps, a = +pm[1], b2 = a + +pm[2];
+    if (b2 < 0 || b2 >= arr.length) return;
+    var tmp = arr[a]; arr[a] = arr[b2]; arr[b2] = tmp;
+    if (pm[0] === "ing") { if (d.anchor === a) d.anchor = b2; else if (d.anchor === b2) d.anchor = a; }
+    var y2 = window.scrollY; renderEdit(); window.scrollTo(0, y2); return;
+  }
+});
+app.addEventListener("input", function (e) {
+  var t = e.target;
+  if (t.id === "amt-input") {
+    var r = findRecipe(S.id); if (!r) return;
+    var v = parseAmount(t.value);
+    if (v > 0) { setAmount(r, v); refreshScalerBits(r); renderPanel(r); }
+    return;
+  }
+  if (t.id === "notes-ta") {
+    var id = S.id, text = t.value, st = document.getElementById("notes-status");
+    if (st) st.textContent = "Typing…";
+    clearTimeout(notesTimer);
+    notesTimer = setTimeout(function () { saveNotes(id, text); }, 900);
+    return;
+  }
+  var d = S.draft; if (!d) return;
+  if (t.hasAttribute("data-f")) d[t.getAttribute("data-f")] = t.value;
+  else if (t.hasAttribute("data-ing")) d.ingredients[+t.getAttribute("data-ing")][t.getAttribute("data-k")] = t.value;
+  else if (t.hasAttribute("data-step-i")) d.steps[+t.getAttribute("data-step-i")][t.getAttribute("data-k")] = t.value;
+});
+app.addEventListener("change", function (e) {
+  var t = e.target, d = S.draft;
+  if (t.id === "amt-input") { var r = findRecipe(S.id); if (r) renderScaler(r); return; }
+  if (!d) return;
+  if (t.hasAttribute("data-anchor")) d.anchor = +t.getAttribute("data-anchor");
+  if (t.tagName === "SELECT" && t.hasAttribute("data-ing")) d.ingredients[+t.getAttribute("data-ing")].unit = t.value;
+});
+layer.addEventListener("click", function (e) {
+  var t = e.target;
+  if (t.closest('[data-act="dlg-delete"]')) return doDelete();
+  if (t.closest('[data-act="dlg-addcode"]')) return addFromCode();
+  if (t.closest('[data-act="dlg-restore"]')) return doRestore();
+  if (t.closest('[data-act="dlg-cancel"]') || t.hasAttribute("data-close")) layer.innerHTML = "";
+});
+document.addEventListener("keydown", function (e) { if (e.key === "Escape" && layer.querySelector(".overlay")) layer.innerHTML = ""; });
+
+/* ================= Saving on this phone ================= */
+var STORE = "jar-recipes-v1", BACKUP_KEY = "jar-last-backup";
+var STARTERS = [{"id": "taco-mince", "order": 1, "notes": "", "anchor": 0, "color": "butter", "mascot": "taco", "name": "Taco Mince", "subtitle": "With tomato paste & onion powder", "ingredients": [{"amount": 500, "name": "beef mince", "unit": "g"}, {"amount": 1, "name": "Old El Paso taco seasoning", "unit": "packet"}, {"amount": 0.5, "name": "water", "unit": "cup"}, {"amount": 1, "name": "tomato paste", "unit": "tbsp"}, {"amount": 1, "name": "onion powder", "unit": "tsp"}, {"amount": 1, "name": "olive oil", "note": "Optional, depending on mince fat content", "unit": "tbsp"}], "steps": [{"title": "Brown the mince", "text": "Heat a frying pan over medium-high heat. Add [olive oil] if using. Add [beef mince] and break it up with a spoon. Cook until browned."}, {"title": "Add tomato paste & onion powder", "text": "Stir in [tomato paste] and [onion powder]. Cook for 1–2 minutes to coat the mince and let the tomato paste deepen in flavour."}, {"title": "Add taco seasoning", "text": "Sprinkle in [Old El Paso taco seasoning] and mix well to coat the mince."}, {"title": "Add water & simmer", "text": "Pour in [water]. Stir, reduce the heat to medium, and let it simmer for about 5 minutes, or until the mixture thickens."}, {"title": "Taste & adjust", "text": "Give it a taste — you can add a pinch of salt or extra onion powder if you like more punch."}]}, {"id": "spaghetti-mince", "order": 2, "notes": "", "anchor": 0, "color": "pink", "mascot": "saucepan", "name": "Spaghetti Mince", "subtitle": "Smooth passata mince sauce for meal prep", "ingredients": [{"amount": 500, "name": "beef mince", "unit": "g"}, {"amount": 1, "name": "passata", "note": "700 g bottle", "unit": "bottle"}, {"amount": 1, "name": "tomato paste", "unit": "tbsp"}, {"amount": 1, "name": "onion powder", "unit": "tsp"}, {"amount": 1, "name": "garlic powder", "unit": "tsp"}, {"amount": 2, "name": "mixed herbs", "note": "Dried", "unit": "tsp"}, {"amount": 1, "name": "beef stock cube", "unit": "cube"}, {"amount": 1, "name": "olive oil", "note": "Optional, depending on mince fat content", "unit": "tbsp"}, {"amount": 0, "name": "salt", "unit": "to taste"}], "steps": [{"title": "Brown the mince", "text": "Heat a large frying pan over medium-high heat. Add [olive oil] if using. Add [beef mince] and keep breaking it up with a spoon into small, fine crumbles. Cook until browned."}, {"title": "Add the powders & herbs", "text": "Stir in [onion powder], [garlic powder], [mixed herbs] and [tomato paste]. Cook for 1–2 minutes, stirring, so the mince is evenly coated."}, {"title": "Add passata & simmer", "text": "Pour in [passata] and crumble in [beef stock cube]. Stir, turn the heat down to medium-low and simmer uncovered for about 15 minutes, stirring now and then, until the sauce thickens."}, {"title": "Taste & adjust", "text": "Give it a taste and add [salt] if it needs it."}]}];
+
+function loadStore() {
+  try {
+    var raw = localStorage.getItem(STORE);
+    if (raw) { var o = JSON.parse(raw); if (o && Array.isArray(o.recipes)) return o.recipes; }
+  } catch (e) {}
+  return null;
+}
+function saveStore() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({ app: "jess-arfid-recipes", version: 1, savedAt: Date.now(), recipes: S.recipes }));
+    return true;
+  } catch (e) {
+    toast("Couldn't save on this phone. Your storage may be full.");
+    return false;
+  }
+}
+
+/* ================= Recipe codes ================= */
+function cleanRecipe(o) {
+  if (!o || typeof o !== "object" || typeof o.name !== "string" || !o.name.trim() || !Array.isArray(o.ingredients) || !o.ingredients.length) return null;
+  var ings = [];
+  for (var i = 0; i < o.ingredients.length; i++) {
+    var g = o.ingredients[i] || {};
+    var unit = UNITS.indexOf(g.unit) >= 0 ? g.unit : "whole";
+    var amt = Number(g.amount);
+    if (typeof g.name !== "string" || !g.name.trim()) return null;
+    if (unit !== "to taste" && !(amt > 0)) return null;
+    var row = { name: g.name.trim(), amount: unit === "to taste" ? 0 : amt, unit: unit };
+    if (typeof g.note === "string" && g.note.trim()) row.note = g.note.trim();
+    ings.push(row);
+  }
+  var anchor = typeof o.anchor === "number" && ings[o.anchor] && ings[o.anchor].unit !== "to taste" ? o.anchor : 0;
+  if (ings[anchor].unit === "to taste") return null;
+  var steps = (Array.isArray(o.steps) ? o.steps : []).map(function (s) {
+    return { title: String((s && s.title) || "").trim(), text: String((s && s.text) || "").trim() };
+  }).filter(function (s) { return s.title || s.text; });
+  return {
+    id: typeof o.id === "string" && /^[a-z0-9-]{1,60}$/.test(o.id) ? o.id : "",
+    name: o.name.trim(), subtitle: typeof o.subtitle === "string" ? o.subtitle.trim() : "",
+    mascot: MASCOTS[o.mascot] ? o.mascot : "pot", color: TINTS[o.color] ? o.color : "pink",
+    anchor: anchor, ingredients: ings, steps: steps
+  };
+}
+function encodeCode(r) {
+  var o = { id: r.id, name: r.name, subtitle: r.subtitle || "", mascot: r.mascot, color: r.color, anchor: anchorOf(r).idx, ingredients: r.ingredients, steps: r.steps };
+  return "JAR1:" + btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+}
+function decodeCode(text) {
+  var s = String(text || "").trim();
+  var k = s.indexOf("JAR1:");
+  try {
+    if (k >= 0) return JSON.parse(decodeURIComponent(escape(atob(s.slice(k + 5).replace(/[^A-Za-z0-9+/=]/g, "")))));
+    if (s.charAt(0) === "{") return JSON.parse(s);
+  } catch (e) {}
+  return null;
+}
+function openCodeDialog() {
+  layer.innerHTML = '<div class="overlay" data-close><div class="sticker dialog wide" role="dialog" aria-modal="true" aria-labelledby="code-t">' +
+    '<h3 id="code-t" style="font-size:20px">Add from a recipe code</h3>' +
+    '<p class="hint" style="margin:0">Paste the code Claude gave you. It starts with JAR1. If you already have that recipe, it gets updated and your notes are kept.</p>' +
+    '<textarea class="codebox" id="code-in" aria-label="Recipe code" placeholder="JAR1:…"></textarea>' +
+    '<p class="err" id="code-err" role="alert"></p>' +
+    '<div class="row"><button class="btn" data-act="dlg-cancel">Cancel</button><button class="btn pink" data-act="dlg-addcode">Add recipe</button></div></div></div>';
+  var t = document.getElementById("code-in"); if (t) t.focus();
+}
+function addFromCode() {
+  var t = document.getElementById("code-in"), err = document.getElementById("code-err");
+  var r = cleanRecipe(decodeCode(t && t.value));
+  if (!r) { if (err) err.textContent = "That code didn't work. Copy the whole code from the chat, including JAR1:, and try again."; return; }
+  var id = r.id || slugify(r.name), old = findRecipe(id);
+  if (old) {
+    var keepNotes = old.notes || "", keepOrder = old.order;
+    if (anchorOf(old).ing.amount !== r.ingredients[r.anchor].amount) { delete S.amounts[id]; lsSet("amt:" + id, ""); }
+    for (var k in r) old[k] = r[k];
+    old.id = id; old.notes = keepNotes; old.order = keepOrder; old.updatedAt = Date.now();
+  } else {
+    r.id = id; r.notes = ""; r.order = Date.now(); r.updatedAt = Date.now();
+    S.recipes.push(r);
+  }
+  if (!saveStore()) return;
+  layer.innerHTML = "";
+  toast(old ? r.name + " updated" : r.name + " added");
+  go("recipe-" + id);
+}
+function copyCode() {
+  var r = S.draft && findRecipe(S.draft.id);
+  if (!r) return;
+  var code = encodeCode(r);
+  var done = function () { toast("Recipe code copied. Paste it into your chat with Claude."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(done, function () { showCode(code); });
+  } else showCode(code);
+}
+function showCode(code) {
+  layer.innerHTML = '<div class="overlay" data-close><div class="sticker dialog wide" role="dialog" aria-modal="true" aria-labelledby="sc-t">' +
+    '<h3 id="sc-t" style="font-size:20px">Recipe code</h3><p class="hint" style="margin:0">Press and hold to select it all, then copy.</p>' +
+    '<textarea class="codebox" readonly aria-label="Recipe code">' + esc(code) + '</textarea>' +
+    '<div class="row"><button class="btn" data-act="dlg-cancel">Done</button></div></div></div>';
+}
+
+/* ================= Backups ================= */
+function shareOrDownload(blob, name, title) {
+  var file;
+  try { file = new File([blob], name, { type: blob.type }); } catch (e) { file = null; }
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    return navigator.share({ files: [file], title: title }).then(function () { return "shared"; }, function (e) {
+      return e && e.name === "AbortError" ? "cancelled" : download();
+    });
+  }
+  return Promise.resolve(download());
+  function download() {
+    try {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+      return "downloaded";
+    } catch (e) { return "failed"; }
+  }
+}
+function doBackup() {
+  var d = new Date();
+  var stamp = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  var body = JSON.stringify({ app: "jess-arfid-recipes", version: 1, exportedAt: d.toISOString(), recipes: S.recipes }, null, 1);
+  var blob = new Blob([body], { type: "text/plain" });
+  shareOrDownload(blob, "arfid-recipes-backup-" + stamp + ".txt", "ARFID recipes backup").then(function (how) {
+    if (how === "cancelled") return;
+    if (how === "failed") { toast("The backup couldn't be made. Try again."); return; }
+    lsSet(BACKUP_KEY, String(Date.now()));
+    toast(how === "shared" ? "Backup sent. Check it landed in Google Drive." : "Backup saved to your Downloads. Upload it to Google Drive to keep it safe.");
+    if (S.view === "home") render();
+  });
+}
+var pendingRestore = null;
+function pickRestore() { var f = document.getElementById("restore-file"); if (f) { f.value = ""; f.click(); } }
+function readRestore(file) {
+  var fr = new FileReader();
+  fr.onload = function () {
+    var o = null;
+    try { o = JSON.parse(String(fr.result)); } catch (e) {}
+    var list = o && Array.isArray(o.recipes) ? o.recipes : null, out = [];
+    if (list) list.forEach(function (x) {
+      var c = cleanRecipe(x);
+      if (c) { c.id = c.id || slugify(c.name); c.notes = typeof x.notes === "string" ? x.notes : ""; c.order = Number(x.order) || Date.now(); out.push(c); }
+    });
+    if (!out.length) { toast("That file isn't a recipe backup. Pick a file named arfid-recipes-backup."); return; }
+    pendingRestore = out;
+    layer.innerHTML = '<div class="overlay" data-close><div class="sticker dialog" role="dialog" aria-modal="true" aria-labelledby="rs-t">' +
+      '<h3 id="rs-t" style="font-size:20px">Restore ' + out.length + ' recipe' + (out.length === 1 ? "" : "s") + '?</h3>' +
+      '<p class="hint" style="margin:0">This replaces the recipes and notes on this phone with the ones in the backup.</p>' +
+      '<div class="row"><button class="btn" data-act="dlg-cancel">Cancel</button><button class="btn pink" data-act="dlg-restore">Restore</button></div></div></div>';
+  };
+  fr.readAsText(file);
+}
+function doRestore() {
+  if (!pendingRestore) return;
+  S.recipes = pendingRestore; pendingRestore = null; S.amounts = {};
+  layer.innerHTML = "";
+  if (saveStore()) { toast("Backup restored"); go(""); }
+}
+
+/* ================= Start ================= */
+function start() {
+  var saved = loadStore();
+  if (saved) S.recipes = saved;
+  else { S.recipes = JSON.parse(JSON.stringify(STARTERS)); saveStore(); }
+  S.loaded = true;
+  route();
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+}
+app.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-act]");
+  if (!t) return;
+  var a = t.getAttribute("data-act");
+  if (a === "code") openCodeDialog();
+  else if (a === "backup") doBackup();
+  else if (a === "restore") pickRestore();
+  else if (a === "copycode") copyCode();
+});
+app.addEventListener("change", function (e) {
+  if (e.target.id === "restore-file" && e.target.files && e.target.files[0]) readRestore(e.target.files[0]);
+});
+start();
+})();
+</script>
+</body>
+</html>
